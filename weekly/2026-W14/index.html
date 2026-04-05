@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>週次分析レポート 2026-W14</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+  .md-content h1 { font-size: 1.875rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 1rem; }
+  .md-content h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.75rem; border-bottom: 2px solid #f59e0b; padding-bottom: 0.25rem; }
+  .md-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #374151; }
+  .md-content h4 { font-size: 1.1rem; font-weight: 600; margin-top: 0.75rem; margin-bottom: 0.5rem; color: #4b5563; }
+  .md-content p { margin-bottom: 0.75rem; line-height: 1.7; }
+  .md-content ul, .md-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.7; }
+  .md-content ul { list-style-type: disc; }
+  .md-content ol { list-style-type: decimal; }
+  .md-content li { margin-bottom: 0.25rem; }
+  .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+  .md-content th { background: #fef3c7; padding: 0.5rem; border: 1px solid #e5e7eb; text-align: left; font-weight: 600; }
+  .md-content td { padding: 0.5rem; border: 1px solid #e5e7eb; }
+  .md-content tr:nth-child(even) td { background: #fafafa; }
+  .md-content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+  .md-content pre { background: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.75rem 0; }
+  .md-content pre code { background: transparent; color: inherit; padding: 0; }
+  .md-content blockquote { border-left: 4px solid #f59e0b; padding-left: 1rem; color: #6b7280; margin: 0.75rem 0; font-style: italic; }
+  .md-content hr { border: 0; border-top: 1px solid #e5e7eb; margin: 1.5rem 0; }
+  .md-content strong { font-weight: 700; color: #111827; }
+  .md-content a { color: #d97706; text-decoration: underline; }
+  .signal-high { background: #fef2f2 !important; border-left: 4px solid #dc2626; }
+  .signal-medium { background: #fffbeb !important; border-left: 4px solid #f59e0b; }
+  @media (max-width: 640px) {
+    .md-content table { font-size: 0.75rem; display: block; overflow-x: auto; }
+  }
+</style>
+</head>
+<body class="bg-gray-50">
+<div class="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-2xl">🐝</span>
+      <span class="text-sm text-gray-500">みつばちのーと 分析システム</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">週次分析レポート</h1>
+    <p class="text-gray-600 mt-1">2026-W14</p>
+  </header>
+
+  <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+    <h2 class="text-xl font-bold mb-4 border-b-2 border-amber-500 pb-2">週次KPI推移（直近12週）</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div><canvas id="revenueChart" height="180"></canvas></div>
+      <div><canvas id="roasChart" height="180"></canvas></div>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+  <h2 class="text-xl font-bold mb-4 border-b-2 border-amber-500 pb-2">システムフロー</h2>
+  <div class="overflow-x-auto">
+    <svg viewBox="0 0 820 420" class="w-full h-auto" style="min-width:640px">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+        </marker>
+      </defs>
+      <!-- Data fetch -->
+      <rect x="20" y="30" width="140" height="50" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+      <text x="90" y="52" text-anchor="middle" font-size="13" font-weight="600">データ取得</text>
+      <text x="90" y="70" text-anchor="middle" font-size="10" fill="#6b7280">スプレッドシート</text>
+      <line x1="160" y1="55" x2="200" y2="55" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+      <!-- 3 agents parallel -->
+      <rect x="200" y="10" width="160" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+      <text x="280" y="35" text-anchor="middle" font-size="12" font-weight="600">広告エージェント</text>
+      <rect x="200" y="58" width="160" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+      <text x="280" y="83" text-anchor="middle" font-size="12" font-weight="600">サイト行動エージェント</text>
+      <rect x="200" y="106" width="160" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+      <text x="280" y="131" text-anchor="middle" font-size="12" font-weight="600">売上・顧客エージェント</text>
+      <text x="280" y="165" text-anchor="middle" font-size="10" fill="#6b7280">（並列実行）</text>
+
+      <line x1="360" y1="78" x2="400" y2="78" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+      <!-- Analyst -->
+      <rect x="400" y="55" width="140" height="50" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+      <text x="470" y="77" text-anchor="middle" font-size="13" font-weight="600">アナリスト</text>
+      <text x="470" y="95" text-anchor="middle" font-size="10" fill="#6b7280">仮説生成</text>
+      <line x1="540" y1="80" x2="580" y2="80" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+      <!-- Consul review -->
+      <rect x="580" y="55" width="140" height="50" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+      <text x="650" y="77" text-anchor="middle" font-size="13" font-weight="600">コンサルレビュー</text>
+      <text x="650" y="95" text-anchor="middle" font-size="10" fill="#6b7280">壁打ち（最大2R）</text>
+
+      <!-- Loop back arrow -->
+      <path d="M 580 105 Q 525 155 470 110" fill="none" stroke="#ec4899" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+      <text x="525" y="155" text-anchor="middle" font-size="10" fill="#ec4899">追加クエリ要求</text>
+
+      <!-- Reporter -->
+      <line x1="650" y1="105" x2="650" y2="190" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="580" y="195" width="140" height="50" rx="6" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+      <text x="650" y="217" text-anchor="middle" font-size="13" font-weight="600">レポーター</text>
+      <text x="650" y="235" text-anchor="middle" font-size="10" fill="#6b7280">レポート生成</text>
+
+      <!-- 3 granularities -->
+      <rect x="20" y="260" width="780" height="100" rx="8" fill="#fafafa" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="410" y="282" text-anchor="middle" font-size="12" font-weight="600" fill="#4b5563">3粒度の分析</text>
+      <rect x="60" y="295" width="220" height="50" rx="6" fill="#fff" stroke="#9ca3af"/>
+      <text x="170" y="316" text-anchor="middle" font-size="12" font-weight="600">日次（Daily）</text>
+      <text x="170" y="333" text-anchor="middle" font-size="10" fill="#6b7280">異常検知・KPI記録</text>
+      <rect x="300" y="295" width="220" height="50" rx="6" fill="#fff" stroke="#9ca3af"/>
+      <text x="410" y="316" text-anchor="middle" font-size="12" font-weight="600">週次（Weekly）</text>
+      <text x="410" y="333" text-anchor="middle" font-size="10" fill="#6b7280">フル分析・壁打ち</text>
+      <rect x="540" y="295" width="220" height="50" rx="6" fill="#fff" stroke="#9ca3af"/>
+      <text x="650" y="316" text-anchor="middle" font-size="12" font-weight="600">月次（Monthly）</text>
+      <text x="650" y="333" text-anchor="middle" font-size="10" fill="#6b7280">戦略分析・自己改善ループ</text>
+
+      <!-- Self-improvement -->
+      <text x="410" y="395" text-anchor="middle" font-size="11" fill="#6b7280" font-style="italic">↑ 月次の自己改善ループで仮説→ルール化、プロンプト改訂提案</text>
+    </svg>
+  </div>
+</section>
+
+  <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+    <div class="md-content"><h1>みつばちのーと 週次分析レポート</h1>
+<p><strong>対象期間</strong>: 2026/03/30（月）〜 2026/04/05（日）</p>
+<p><strong>作成日</strong>: 2026/04/05</p>
+<p><strong>作成</strong>: マーケティング分析AI（週次レポーターエージェント）</p>
+<hr>
+<h2>【1. エグゼクティブサマリー】</h2>
+<p>■ 今週の売上: <strong>¥4,119,445</strong>（前週比 <strong>+6.2%</strong> / 前年同週比 <strong>-22.1%</strong>）</p>
+<p>■ 広告費: <strong>¥956,271</strong>（前週比 -24.1% / ROAS 1.90倍・前週比 -15.1%）</p>
+<p>■ 新規顧客: 177件（前週比 -36件 / 前年同週比 <strong>-48.5%</strong>）</p>
+<p>■ 定期便 実質稼働率: <strong>47.2%</strong>（4週で -1.4pt低下）</p>
+<h3>【最重要トピック】</h3>
+<ol>
+<li><strong>新規売上 前年同週比 -46.3%</strong> — 壊滅シグナル。単価（AOV +4.4%）は健全で、崩れているのは「新規流入の質と量」である。</li>
+<li><strong>計測タグ破損（ecomm_prodid）JSエラー4,699件</strong> — 広告CV計測が壊れている疑い。P-MAX CPA +79%急騰の主因である可能性が高い。今すぐ修正すべきS案件。</li>
+<li><strong>母の日まで残り5週間、ギフトキャンペーン未仕込み</strong> — Google・Meta両方でギフト系配信ゼロ。田中氏が採蜜に入る前（4月前半）が仕込みデッドラインである。</li>
+</ol>
+<hr>
+<h2>🚨 クリティカルアラート</h2>
+<table><thead><tr>
+<th>#</th>
+<th>シグナル</th>
+<th>数値</th>
+<th>影響</th>
+</tr></thead><tbody>
+<tr class="signal-high">
+<td>1</td>
+<td><strong>広告CV計測乖離急変</strong></td>
+<td>広告CV値/実売上 72.7%→<strong>44.1%</strong>（-28.6pt、±20pt閾値超）</td>
+<td>広告学習データ枯渇でCPA高騰継続リスク</td>
+</tr>
+<tr class="signal-high">
+<td>2</td>
+<td><strong>新規売上 前年同週比</strong></td>
+<td><strong>-46.3%</strong>、新規件数 -48.5%</td>
+<td>新規獲得エンジン崩壊</td>
+</tr>
+<tr class="signal-high">
+<td>3</td>
+<td><strong>P-MAX CPA急騰</strong></td>
+<td>¥3,235→¥5,548（+71.5%）/ P-Max-ハチミツ飴-新規は +241%</td>
+<td>広告費効率の崩壊</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>定期便LP レイジクリック</strong></td>
+<td>1003S-30-3SUB_2026.html で94件（Clarity Top1異常値）</td>
+<td>定期便獲得ペース鈍化の症状</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>ecomm_prodidタグ破損</strong></td>
+<td>2026-01-04に破損開始（3ヶ月継続）</td>
+<td>リマケ機会損失・動的広告CV計測精度低下</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>【2. 数字で見る今週】</h2>
+<table><thead><tr>
+<th>KPI</th>
+<th>今週 W14</th>
+<th>先週 W13</th>
+<th>前週比</th>
+<th>前年同週 W14</th>
+<th>前年比</th>
+<th>評価</th>
+</tr></thead><tbody>
+<tr class="signal-high">
+<td>総売上</td>
+<td>¥4,119,445</td>
+<td>¥3,878,769</td>
+<td>+6.2%</td>
+<td>¥5,287,150</td>
+<td>-22.1%</td>
+<td>🔴</td>
+</tr>
+<tr>
+<td>AOV（客単価）</td>
+<td>¥8,636</td>
+<td>¥8,506</td>
+<td>+1.5%</td>
+<td>¥8,379</td>
+<td>+3.1%</td>
+<td>🟢</td>
+</tr>
+<tr class="signal-high">
+<td>新規売上</td>
+<td>¥1,392,960</td>
+<td>¥1,496,999</td>
+<td>-6.9%</td>
+<td>¥2,593,759</td>
+<td><strong>-46.3%</strong></td>
+<td>🔴</td>
+</tr>
+<tr class="signal-high">
+<td>新規件数</td>
+<td>177件</td>
+<td>213件</td>
+<td>-16.9%</td>
+<td>344件</td>
+<td>-48.5%</td>
+<td>🔴</td>
+</tr>
+<tr>
+<td>新規AOV</td>
+<td>¥7,870</td>
+<td>¥7,028</td>
+<td>+12.0%</td>
+<td>¥7,540</td>
+<td>+4.4%</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>リピート売上</td>
+<td>¥2,726,485</td>
+<td>¥2,381,770</td>
+<td>+14.5%</td>
+<td>¥2,693,391</td>
+<td>+1.2%</td>
+<td>🟢</td>
+</tr>
+<tr class="signal-medium">
+<td>新規/リピート比率</td>
+<td>34/66</td>
+<td>39/61</td>
+<td>—</td>
+<td>49/51</td>
+<td>—</td>
+<td>🟡</td>
+</tr>
+<tr>
+<td>F2転換率</td>
+<td>—（データ未取得）</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="signal-medium">
+<td>定期便稼働数</td>
+<td>844</td>
+<td>838</td>
+<td>+6</td>
+<td>—</td>
+<td>—</td>
+<td>🟡</td>
+</tr>
+<tr class="signal-high">
+<td>定期便実質稼働率</td>
+<td>47.2%</td>
+<td>48.6%</td>
+<td>-1.4pt</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr class="signal-high">
+<td>定期便ネット増減</td>
+<td>+3〜+4（暫定）</td>
+<td>+10</td>
+<td>低下</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr>
+<td>ギフト注文比率</td>
+<td>—（データ未取得）</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="signal-medium">
+<td>広告費（全体）</td>
+<td>¥956,271</td>
+<td>¥1,259,050</td>
+<td>-24.1%</td>
+<td>—</td>
+<td>—</td>
+<td>🟡</td>
+</tr>
+<tr class="signal-high">
+<td>CPA（全体・広告計測）</td>
+<td>¥4,104</td>
+<td>¥3,331</td>
+<td>+23.2%</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr class="signal-high">
+<td>ROAS（全体・広告計測）</td>
+<td>1.90</td>
+<td>2.24</td>
+<td>-15.1%</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr class="signal-high">
+<td>広告CV値/実売上乖離率</td>
+<td>44.1%</td>
+<td>72.7%</td>
+<td>-28.6pt</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr>
+<td>セッション数（Clarity）</td>
+<td>35,345</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CVR（全体・GA4）</td>
+<td>—（データ未取得）</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>※ GA4データ未取得のためファネル/流入別CVRは算出不可。Shopserve個別注文CSV未取得のためF2転換率・ギフト識別は算出不可である。</p>
+<p>※ 4/4(土)以降の広告データが薄く（4/5=¥0）週合計が過少計上の可能性あり。次週再確認要。</p>
+<p>🟢 改善 / 🟡 横ばい（±5%以内）/ 🔴 悪化</p>
+<hr>
+<h2>【3. 今週のハイライト】</h2>
+<h3>良かったこと TOP3</h3>
+<ol>
+<li><strong>AOV +3.1%前年比</strong> — 単価¥8,636は堅調。価格設定・商品魅力は崩れていない。</li>
+<li><strong>リピート売上 +14.5%前週比</strong> — 既存顧客が下支え。ただし3/18・4/4のリピートスパイクは定期便配送サイクルの交絡要因を含む。</li>
+<li><strong>SEARCH（屋号指名）CPA ¥116</strong> — ブランド指名検索は引き続き極端な低CPAで機能中。QS 9-10維持。</li>
+</ol>
+<h3>課題・懸念 TOP3</h3>
+<ol>
+<li><strong>新規売上 前年同週比 -46.3%</strong> — 最深刻。価格ではなく流入・認知の問題。計測タグ破損（H0001）と新蜜切替学習リセット（H0007）の複合疑い。</li>
+<li><strong>広告CV値/実売上 乖離率 -28.6pt急変</strong> — ecomm_prodid JSエラー4,699件と同時発生。広告側のCV後付計測失敗の可能性が高い。</li>
+<li><strong>定期便 実質稼働率 -1.4pt（4週）</strong> — 休止242名から解約転換が進行。新蜜シーズン★★★の獲得機会を逃している。</li>
+</ol>
+<hr>
+<h2>【4. 広告レポート（簡易版）】</h2>
+<h3>Google Ads</h3>
+<ul>
+<li>P-MAX全体CPA ¥3,235→¥5,548（+71.5%）、P-Max-手動-ハチミツ飴-新規は ¥3,103→¥10,591（+241%）。<strong>CPA &gt; 新規AOV¥7,870の赤字</strong>状態。</li>
+<li>ショッピング広告 <strong>ギフト商品群CVR 4.83%（通常の4.4倍）/ CPA ¥1,311（通常の32%）</strong> — 既に効率実証済。ただし4月ギフト系KWのimpは0。</li>
+<li>Demand_手動-定期便-屋号kw が4月¥13,081消化でCV0。定期便獲得広告が完全停止。</li>
+<li>SHOPPING_FIX_DISAPPROVED_PRODUCTS 2件（不承認商品）あり。即修正可。</li>
+</ul>
+<h3>Meta</h3>
+<ul>
+<li>Meta ROAS <strong>2.74倍</strong> &gt; Google ROAS 1.52倍（1.8倍効率）。Meta CPA ¥3,086 vs Google ¥4,954。</li>
+<li>カタログ広告_手動のFreq 1.1-1.14で疲弊なし。<strong>+20%増額余地あり</strong>（スケール候補）。</li>
+<li>ASC_定期便は CPA ¥3,715・CTR 6.29% で機能中だが単一頼みの状態。</li>
+<li><strong>ギフト系ACTIVEキャンペーン 0件</strong> — 母の日仕込み未着手。</li>
+</ul>
+<hr>
+<h2>【5. 顧客・商品レポート（簡易版）】</h2>
+<p><strong>BASIC MODE制約</strong>: <code>data/shopserve_orders/</code> が空のため、商品別売上TOP5・新規初回購入商品・ギフト識別・F2転換率・RFMはスキップ。本週は ACL_売上 の集計データのみで分析した。</p>
+<ul>
+<li>新規/リピート構成比: <strong>34%/66%</strong>（前年同週49%/51%からリピート依存度が増加）。</li>
+<li>3月月次売上成長率は前年比+1.1%と鈍化（過去3年は+20〜30%）。リピート・定期便が下支えする一方、新規獲得に陰り。</li>
+<li>定期便: 稼働844 / 休止242 / 実質稼働率47.2%。W08のキャンペーン貯金（+106）を食い潰している状態。</li>
+<li>4月MTD新規売上ペース: 前年4月実績¥23.19Mに対し約87%ペース（月末予測¥20.1M）。</li>
+</ul>
+<blockquote>商品別・顧客別の詳細分析は Shopserve個別注文CSV の取得により有効化される。</blockquote>
+<hr>
+<h2>【6. 改善提案】</h2>
+<h3>🏆 今週やるべきこと（優先度S・実行難易度低）</h3>
+<h4>1. ecomm_prodid タグ修正（H0001）【⚠️ 発生日2026-01-04に特定済み・因果見直し】</h4>
+<ul>
+<li><strong>担当</strong>: Hiroki（最優先・今日中着手）</li>
+<li><strong>✅ 発生日特定済み（Clarity MCPで確認）</strong>:</li>
+<li>2025-12-29: 38件（低位ベースライン）</li>
+<li>2026-01-03: 78件（まだ低位）</li>
+<li><strong>2026-01-04: 518件（+564%急増）</strong> ← 破損開始日</li>
+<li>2026-02: 635〜900件（ピーク）</li>
+<li>2026-03〜04: 280〜445件（高止まり継続）</li>
+<li><strong>🔄 H0001の因果強度・優先度を見直し</strong>:</li>
+<li>タグ破損は<strong>3ヶ月前（1月4日）から継続</strong>。3月下旬〜4月のCPA急騰とは時期が一致しない</li>
+<li>今週のCPA急騰の主因は <strong>H0007（P-MAX新蜜切替の学習リセット）</strong> に移行</li>
+<li>ただしタグ修正は<strong>恒常的な広告計測精度改善</strong>のために必須（3ヶ月分のリマケ機会損失）</li>
+<li><strong>今週やること</strong>:</li>
+</ul>
+<ol>
+<li>2026-01-04前後にShopserveで適用された変更を特定（新年キャンペーンテンプレート／タグマネージャー変更等）</li>
+<li>Shopserve商品詳細／カートテンプレートで <code>ecomm_prodid</code> 定義箇所のコード確認・修正する。</li>
+<li>Google Tag Assistant と Meta Pixel Helper でタグ発火を目視検証する。</li>
+</ol>
+<ul>
+<li><strong>期待効果</strong>: 広告CV計測の正常化・動的リマーケティング復活。週間広告費効率 <strong>+¥150K</strong>見込み（当初¥200Kから下方修正）。</li>
+<li><strong>検証KPI</strong>: JSエラー4,699件→500件以下、広告CV値/実売上乖離率 44%→65%以上。</li>
+</ul>
+<h4>2. 母の日ギフトキャンペーン 即時立ち上げ（H0002）</h4>
+<ul>
+<li><strong>担当</strong>: 田中氏（広告運用）</li>
+<li><strong>今週やること</strong>:</li>
+</ul>
+<ol>
+<li><strong>2025年5月のギフト売上をACL_売上から抽出</strong>しベースライン確認する（先行）。</li>
+<li>Google Ads 母の日KWキャンペーンを新規作成する（「母の日 はちみつ」「母の日 ギフト 国産」等）。</li>
+<li>Metaでギフト系カタログフィルタの新規キャンペーンを立ち上げる。</li>
+<li>クリエイティブは<strong>「母への手紙」訴求</strong>（田中氏の手書きメッセージ世界観）で即決する。</li>
+</ol>
+<ul>
+<li><strong>期待効果</strong>: 保守シナリオ <strong>+¥400K/月</strong>（CVR3%・CV+40件）、中位 +¥800K〜¥1.6M、母の日ピーク週 上振れ+¥1.6M。</li>
+<li><strong>検証KPI</strong>: ギフト系KW週間imp 10,000以上、ギフトCP週間CV 20件以上、ギフトCVR 3%以上。</li>
+<li><strong>デッドライン</strong>: 4月前半（田中氏が採蜜に入る前）。母の日5/10の2週間前=4/26までに広告稼働必須。</li>
+</ul>
+<h4>3. 定期便LPセッション録画3件 目視確認（H0003）</h4>
+<ul>
+<li><strong>担当</strong>: Hiroki（今週中・30分作業）</li>
+<li><strong>今週やること</strong>:</li>
+</ul>
+<ol>
+<li>Clarity管理画面で1003S-30-3SUB_2026.htmlのレイジクリック発生セッション録画を3件視聴する。</li>
+<li>症状を「CTAボタン反応不良／表示遅延／誤タップ／別要素」のいずれかに切り分ける。</li>
+<li>結果に応じて改修方針を確定する（Step2は2週間で実装）。</li>
+</ol>
+<ul>
+<li><strong>期待効果</strong>: 定期便新規獲得 週5-27件→週30-50件に回復。月間+¥280K、年換算+¥3.4M。</li>
+<li><strong>注意</strong>: レイジクリック94件は「症状」であって原因ではない。録画を見ずに改修に入ると的外れになるため、<strong>まず見ること</strong>。</li>
+</ul>
+<hr>
+<h3>📋 今月中に着手すべきこと（優先度A）</h3>
+<h4>4. 休止顧客242名への新蜜再開リマインド配信（H0008）</h4>
+<ul>
+<li><strong>担当</strong>: 田中氏（文面30分）+ CS（配信実務）</li>
+<li><strong>アクション</strong>: 「新蜜入荷のお知らせ＋再開ワンクリックリンク」メール/LINE配信。田中氏の手書きメッセージトーンで文面を作成する。</li>
+<li><strong>期待効果</strong>: 保守5%=12件、上振れ10%=24件。LTV+¥720K想定。</li>
+<li><strong>理由</strong>: 4月新蜜入荷という田中氏ブランド世界観の最強トリガーと同期する施策。優先度をB→Aへ引き上げ。</li>
+</ul>
+<h4>5. Meta予算 +20%増額（今週即実行） / Google P-Max -10%減額（タグ修正後1週間待機）（H0006）</h4>
+<ul>
+<li><strong>担当</strong>: 田中氏（Meta増額は10分作業）</li>
+<li><strong>アクション</strong>: カタログ広告_手動（原本+コピー）に+20%増額。Google減額は<strong>H0001タグ修正後</strong>に判断する（CV計測回復でGoogle評価基準が変わるため）。</li>
+<li><strong>期待効果</strong>: 純効果 +¥100K/週、月間 +¥400K。</li>
+<li><strong>検証KPI</strong>: Meta Freq 1.5以下維持、ROAS 2.5以上維持。</li>
+</ul>
+<h4>6. P-MAX不承認商品2件 即修正（H0007 Step1）</h4>
+<ul>
+<li><strong>担当</strong>: 田中氏（10分作業）</li>
+<li><strong>アクション</strong>: SHOPPING_FIX_DISAPPROVED_PRODUCTS 2件を特定・修正する。アセット拡充（動画1+画像3+テキスト5）は養蜂オフ期の7-8月に回す。</li>
+<li><strong>期待効果</strong>: 短期：CV漏れ是正。中期：Ad Strength向上で週間-15%改善。</li>
+</ul>
+<hr>
+<h3>💡 検討課題（優先度B以下）</h3>
+<ul>
+<li><strong>H0004（B）</strong>: モバイルCVR 7倍差はH0001タグ修正後の計測正常化を待って再評価。今週はデッドクリック1,220件の発生箇所特定のみ（Hiroki 1時間）。sticky CTA ABテストは8〜10月の仕込み期に延期。</li>
+<li><strong>H0005（C）</strong>: カート離脱688件はClarityセッション録画5件確認（Hiroki 1時間）のみ今週実施。理由が見えなければ次週以降持ち越し。Shopserve外部カートは改修難易度高い。</li>
+<li><strong>H0009（C）</strong>: 一般カテゴリKW（「はちみつ ギフト」等）の手動Searchテストは実CPA¥3,000-5,000が現実値で今週着手せず、8月仕込み期に再評価。</li>
+</ul>
+<hr>
+<h2>【7. 来週の注目ポイント】</h2>
+<ul>
+<li><strong>季節需要（CLAUDE.md季節カレンダー）</strong>: 4月=新蜜シーズン開始・予約販売（★★★）。5月母の日ギフト仕込みの最終局面。</li>
+<li><strong>広告で注意すべきポイント</strong>:</li>
+<li>H0001タグ修正後のP-MAX CPA・広告CV値乖離率の推移を日次でモニタリングする。</li>
+<li>Meta+20%増額後のFreq推移（1.5以下を維持できるか）。</li>
+<li>ギフト系KW/CP立ち上げ後2週間でギフトCVR 3%以上が出るか。</li>
+<li><strong>監視すべきKPI</strong>:</li>
+<li>新規件数の前年同週比（-48.5%が改善に向かうか）。</li>
+<li>定期便ネット増減（W11-W12は2週連続マイナス、W13反転、W14失速の傾向）。</li>
+<li>広告CV値/実売上乖離率（44.1%→65%以上への回復）。</li>
+</ul>
+<hr>
+<h2>【8. 仮説検証ログ】</h2>
+<p>初回実行のため新規仮説9件を登録する。前週以前の仮説はない。</p>
+<table><thead><tr>
+<th>#</th>
+<th>仮説</th>
+<th>カテゴリ</th>
+<th>立案週</th>
+<th>優先度</th>
+<th>ステータス</th>
+<th>結果概要</th>
+</tr></thead><tbody>
+<tr>
+<td>H0001</td>
+<td>計測タグ破損（ecomm_prodid）が広告CPA急騰・CV計測乖離の主因</td>
+<td>ad_optimization</td>
+<td>W14</td>
+<td><strong>S</strong></td>
+<td>new</td>
+<td>検証開始</td>
+</tr>
+<tr>
+<td>H0002</td>
+<td>母の日ギフト仕込み未着手で月内7桁機会損失</td>
+<td>gift_maximization</td>
+<td>W14</td>
+<td><strong>S</strong></td>
+<td>new</td>
+<td>検証開始</td>
+</tr>
+<tr>
+<td>H0003</td>
+<td>定期便LPのUI障壁が獲得ペース鈍化の直接原因（録画で切り分け）</td>
+<td>subscription</td>
+<td>W14</td>
+<td><strong>S</strong></td>
+<td>new</td>
+<td>検証開始</td>
+</tr>
+<tr>
+<td>H0004</td>
+<td>モバイルLPファーストビューCTA不在が7倍CVR差を生む</td>
+<td>ui_improvement</td>
+<td>W14</td>
+<td>B</td>
+<td>new</td>
+<td>H0001後に再評価</td>
+</tr>
+<tr>
+<td>H0005</td>
+<td>カート3ページ期待ミスマッチでクイックバック688件</td>
+<td>ui_improvement</td>
+<td>W14</td>
+<td>C</td>
+<td>new</td>
+<td>録画確認のみ</td>
+</tr>
+<tr>
+<td>H0006</td>
+<td>Meta ROAS優位を活用した予算シフト</td>
+<td>ad_optimization</td>
+<td>W14</td>
+<td>A</td>
+<td>new</td>
+<td>Meta+20%即実行</td>
+</tr>
+<tr>
+<td>H0007</td>
+<td>P-MAX学習リセットが4月CPA急騰の一因（2段階）</td>
+<td>ad_optimization</td>
+<td>W14</td>
+<td>A</td>
+<td>new</td>
+<td>不承認修正即日</td>
+</tr>
+<tr>
+<td>H0008</td>
+<td>休止顧客242名への新蜜再開リマインド</td>
+<td>subscription</td>
+<td>W14</td>
+<td>A</td>
+<td>new</td>
+<td>今週配信</td>
+</tr>
+<tr>
+<td>H0009</td>
+<td>屋号指名検索安定性を活用した新規KW開拓</td>
+<td>new_acquisition</td>
+<td>W14</td>
+<td>C</td>
+<td>new</td>
+<td>8月持ち越し</td>
+</tr>
+</tbody></table>
+<p><strong>優先度変更履歴（コンサルレビュー反映）</strong>: H0004（A→B）、H0005（A→C）、H0008（B→<strong>A</strong>）、H0009（B→C）。</p>
+<hr>
+<h2>【補足・データ信頼度メモ】</h2>
+<ul>
+<li><strong>BASIC MODE</strong>: <code>data/shopserve_orders/</code> 空のためF2転換率・ギフト識別・RFM・LTVは算出不可。Shopserve個別注文CSV取得で有効化される。</li>
+<li><strong>GA4未取得</strong>: ファネル通過率・source/medium別CVR・新規率は算出不可。Clarity単独での行動分析。</li>
+<li><strong>4/4以降の広告データ減</strong>: GAS集計遅延の可能性が高く、次週データで確認要。</li>
+<li><strong>H0001因果強度</strong>: ecomm_prodidエラー発生開始日が未特定のため、発生日特定後に再確定する。</li>
+</ul></div>
+  </section>
+
+  <footer class="text-center text-xs text-gray-400 mt-8 pt-4 border-t">
+    <p>Generated by みつばちのーと マーケティング分析自動化システム</p>
+    <p class="mt-1">2026-04-05 12:01:08</p>
+  </footer>
+</div>
+
+<script>
+const chartLabels = ["2026-W14"];
+const revenueData = [4119445.0];
+const ordersData = [477.0];
+const roasData = [4.31];
+const cpaData = [4104.0];
+
+new Chart(document.getElementById('revenueChart'), {
+  type: 'line',
+  data: {
+    labels: chartLabels,
+    datasets: [
+      {label: '売上(¥)', data: revenueData, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', yAxisID: 'y', tension: 0.3},
+      {label: '注文数', data: ordersData, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', yAxisID: 'y1', tension: 0.3}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {title: {display: true, text: '週次 売上・注文数推移'}},
+    scales: {
+      y: {type:'linear', position:'left', title:{display:true, text:'売上(¥)'}},
+      y1:{type:'linear', position:'right', title:{display:true, text:'注文数'}, grid:{drawOnChartArea:false}}
+    }
+  }
+});
+new Chart(document.getElementById('roasChart'), {
+  type: 'line',
+  data: {
+    labels: chartLabels,
+    datasets: [
+      {label: 'ROAS', data: roasData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', yAxisID: 'y', tension: 0.3},
+      {label: 'CPA(¥)', data: cpaData, borderColor: '#ec4899', backgroundColor: 'rgba(236,72,153,0.1)', yAxisID: 'y1', tension: 0.3}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {title: {display: true, text: '週次 ROAS・CPA推移'}},
+    scales: {
+      y: {type:'linear', position:'left', title:{display:true, text:'ROAS'}},
+      y1:{type:'linear', position:'right', title:{display:true, text:'CPA(¥)'}, grid:{drawOnChartArea:false}}
+    }
+  }
+});
+</script>
+</body>
+</html>

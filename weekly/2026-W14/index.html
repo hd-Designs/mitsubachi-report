@@ -70,6 +70,8 @@
 <li><strong>新規売上 前年同週比 -46.3%</strong> — 壊滅シグナル。単価（AOV +4.4%）は健全で、崩れているのは「新規流入の質と量」である。</li>
 <li><strong>計測タグ破損（ecomm_prodid）JSエラー4,699件</strong> — 広告CV計測が壊れている疑い。P-MAX CPA +79%急騰の主因である可能性が高い。今すぐ修正すべきS案件。</li>
 <li><strong>母の日まで残り5週間、ギフトキャンペーン未仕込み</strong> — Google・Meta両方でギフト系配信ゼロ。4月前半が仕込みデッドラインである（5/10母の日の2週間前=4/26までに広告稼働必須）。</li>
+<li><strong>【新発見・GA4実測】Audience Network 6日間2,943セッション購入0件 / Threads_Feed 2,469セッションCVR 0.20%</strong> — 広告費の無駄消化。即時配信停止すべきS案件。</li>
+<li><strong>【新発見・GA4実測】LINE広告 line02 CVR 10.27% / line_rich 3.08%</strong> — 予算増額候補No.1（優先度A）。</li>
 </ol>
 <hr>
 <h2>🚨 クリティカルアラート</h2>
@@ -274,9 +276,81 @@
 <td>—</td>
 <td>—</td>
 </tr>
+<tr class="signal-medium">
+<td>セッション数（GA4）</td>
+<td>32,556</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>🟡</td>
+</tr>
+<tr class="signal-medium">
+<td>ユーザー数（GA4）</td>
+<td>26,761</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>🟡</td>
+</tr>
 <tr>
+<td>初回訪問（first_visit）</td>
+<td>21,232</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="signal-high">
 <td>CVR（全体・GA4）</td>
-<td>—（データ未取得）</td>
+<td>1.15%</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr>
+<td>view→cart率</td>
+<td>5.6%</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cart→purchase率</td>
+<td>16.3%</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="signal-high">
+<td>モバイルCVR</td>
+<td>1.12%</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>🔴</td>
+</tr>
+<tr class="signal-medium">
+<td>デスクトップCVR</td>
+<td>1.86%</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>🟡</td>
+</tr>
+<tr>
+<td>モバイル構成比</td>
+<td>92.7%</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
@@ -284,7 +358,7 @@
 <td>—</td>
 </tr>
 </tbody></table>
-<p>※ GA4データ未取得のためファネル/流入別CVRは算出不可。Shopserve個別注文CSV未取得のためF2転換率・ギフト識別は算出不可である。</p>
+<p>※ GA4データは <strong>BigQuery MCP直接クエリで取得</strong>（2026-03-30〜04-04の6日分。04-05はBQ未反映）。Shopserve個別注文CSV未取得のためF2転換率・ギフト識別は算出不可である。</p>
 <p>※ 4/4(土)以降の広告データが薄く（4/5=¥0）週合計が過少計上の可能性あり。次週再確認要。</p>
 <p>🟢 改善 / 🟡 横ばい（±5%以内）/ 🔴 悪化</p>
 <hr>
@@ -327,6 +401,134 @@
 <li>4月MTD新規売上ペース: 前年4月実績¥23.19Mに対し約87%ペース（月末予測¥20.1M）。</li>
 </ul>
 <blockquote>商品別・顧客別の詳細分析は Shopserve個別注文CSV の取得により有効化される。</blockquote>
+<hr>
+<h2>【5-B. GA4流入・デバイス分析（BigQuery MCP 新規取得）】</h2>
+<h3>流入元別 セッション・CVR（上位15、03-30〜04-04の6日間）</h3>
+<table><thead><tr>
+<th>source / medium</th>
+<th>セッション</th>
+<th>購入</th>
+<th>CVR</th>
+<th>所見</th>
+</tr></thead><tbody>
+<tr>
+<td>google / cpc</td>
+<td>17,447</td>
+<td>150</td>
+<td>0.86%</td>
+<td>最大流入だが低CVR。H0001タグ破損影響</td>
+</tr>
+<tr>
+<td>(direct) / (none)</td>
+<td>4,408</td>
+<td>112</td>
+<td><strong>2.54%</strong></td>
+<td>🟢 最強コンバーター（指名/ブクマ/純広）</td>
+</tr>
+<tr class="signal-high">
+<td>Threads_Feed / cpm</td>
+<td>2,469</td>
+<td>5</td>
+<td><strong>0.20%</strong></td>
+<td>🔴 ほぼコンバートせず</td>
+</tr>
+<tr class="signal-high">
+<td>an / cpm</td>
+<td>2,220</td>
+<td>0</td>
+<td><strong>0%</strong></td>
+<td>🔴 オーディエンスネットワーク機能停止</td>
+</tr>
+<tr>
+<td>Instagram_Feed / cpm</td>
+<td>1,501</td>
+<td>22</td>
+<td>1.47%</td>
+<td>健全</td>
+</tr>
+<tr class="signal-high">
+<td>an / paid</td>
+<td>723</td>
+<td>0</td>
+<td><strong>0%</strong></td>
+<td>🔴 同上</td>
+</tr>
+<tr>
+<td>Instagram_Stories / cpm</td>
+<td>510</td>
+<td>2</td>
+<td>0.39%</td>
+<td>低CVR</td>
+</tr>
+<tr>
+<td>google / organic</td>
+<td>501</td>
+<td>6</td>
+<td>1.20%</td>
+<td>安定</td>
+</tr>
+<tr>
+<td>line_rich / line</td>
+<td>260</td>
+<td>8</td>
+<td><strong>3.08%</strong></td>
+<td>🟢 高効率</td>
+</tr>
+<tr>
+<td>line02 / line</td>
+<td>146</td>
+<td>15</td>
+<td><strong>10.27%</strong></td>
+<td>🟢 突出した高効率</td>
+</tr>
+</tbody></table>
+<h3>デバイス別 CVR</h3>
+<table><thead><tr>
+<th>デバイス</th>
+<th>セッション</th>
+<th>構成比</th>
+<th>CVR</th>
+</tr></thead><tbody>
+<tr>
+<td>mobile</td>
+<td>30,178</td>
+<td><strong>92.7%</strong></td>
+<td>1.12%</td>
+</tr>
+<tr>
+<td>desktop</td>
+<td>1,671</td>
+<td>5.1%</td>
+<td><strong>1.86%</strong></td>
+</tr>
+<tr>
+<td>tablet</td>
+<td>707</td>
+<td>2.2%</td>
+<td>0.85%</td>
+</tr>
+</tbody></table>
+<h3>ファネル通過率</h3>
+<pre><code>
+session_start (32,556) → view_item (40,724) → add_to_cart (2,288) → purchase (374)
+                       session→view 125.1%    view→cart 5.6%       cart→purchase 16.3%
+                                                                   overall CVR: 1.15%
+</code></pre>
+<p>※ <code>session→view 125%</code> は1セッションで複数商品閲覧のため正常。</p>
+<h3>重要発見</h3>
+<ol>
+<li><strong>🔄 H0004（モバイルCVR 7倍差）は誤仮説である</strong></li>
+</ol>
+<ul>
+<li>実測: デスクトップ 1.86% vs モバイル 1.12% = <strong>1.66倍差</strong></li>
+<li>仮説の「7倍差」はH0001タグ破損による計測歪曲の可能性が高い</li>
+<li><strong>H0004のステータスを <code>rejected</code> に変更推奨</strong>。ただしモバイル構成比92.7%でCVRが1.12%という事実は別の改善機会（モバイルUI最適化）を示す</li>
+</ul>
+<ol>
+<li><strong>🚨 Audience Network（an）が完全機能停止</strong> — 2,943セッションで購入ゼロ。即時配信停止すべき無駄広告</li>
+<li><strong>🚨 Threads_Feed 低CVR 0.20%</strong> — 広告クリエイティブ/ターゲティングの大幅見直し必要</li>
+<li><strong>🏆 LINE広告が突出</strong> — line02/line 10.27%、line_rich/line 3.08%。予算増額候補No.1</li>
+</ol>
 <hr>
 <h2>【6. 改善提案】</h2>
 <h3>🏆 今週やるべきこと（優先度S・実行難易度低）</h3>
@@ -384,6 +586,40 @@
 <li><strong>期待効果</strong>: 定期便新規獲得 週5-27件→週30-50件に回復。月間+¥280K、年換算+¥3.4M</li>
 <li><strong>検証KPI</strong>: レイジクリック94件→30件以下、定期便新規獲得 週30件以上</li>
 </ul>
+<h4>3-B. Audience Network（an）配信 即時停止（GA4実測H0010・新規仮説）</h4>
+<ul>
+<li><strong>領域</strong>: 広告</li>
+<li><strong>対象</strong>: Meta広告「Audience Network配信面」を含む全キャンペーン（GA4でmedium=cpm/paid・source=anが該当）</li>
+<li><strong>作業内容</strong>:</li>
+</ul>
+<ol>
+<li>Meta広告マネージャで全アクティブキャンペーンの配信面設定を確認する。</li>
+<li>「Audience Network」配信面を含むものを特定し、チェックを外す（FacebookフィードとInstagramのみに絞る）。</li>
+<li>過去1週間の Audience Network 配信のインプレッション・消化金額を確認し、無駄消化額を算出する。</li>
+</ol>
+<ul>
+<li><strong>期限</strong>: 2026-04-08</li>
+<li><strong>作業時間目安</strong>: 15分</li>
+<li><strong>期待効果</strong>: 6日間でセッション2,943・購入0件→即時停止で週間無駄消化額を全額削減（推定¥30K-80K/週）</li>
+<li><strong>検証KPI</strong>: GA4でsource=an のセッション 週間100以下、Meta広告の週間CV数+5件以上（予算転用効果）</li>
+</ul>
+<h4>3-C. Threads_Feed配信 一時停止 + クリエイティブ見直し（GA4実測H0011・新規仮説）</h4>
+<ul>
+<li><strong>領域</strong>: 広告</li>
+<li><strong>対象</strong>: Meta広告「Threads_Feed配信面」を含むキャンペーン</li>
+<li><strong>作業内容</strong>:</li>
+</ul>
+<ol>
+<li>Threads_Feed配信面のみをOFFにしてFacebook/Instagramに予算を再配分する。</li>
+<li>過去2週間のThreads_Feedクリエイティブ（画像/動画）をMeta広告マネージャで書き出す。</li>
+<li>クリエイティブをInstagramで高CVR（1.47%）を出している素材と見比べ、差分を特定する。</li>
+</ol>
+<ul>
+<li><strong>期限</strong>: 2026-04-11</li>
+<li><strong>作業時間目安</strong>: 30分</li>
+<li><strong>期待効果</strong>: 6日間で2,469セッション・購入5件（CVR0.20%）→ 予算転用で週間CV+10件見込み</li>
+<li><strong>検証KPI</strong>: Threads_Feed 週間セッション500以下、全体CVR 1.15%→1.30%以上</li>
+</ul>
 <hr>
 <h3>📋 今月中に着手すべきこと（優先度A）</h3>
 <h4>4. 休止顧客242名への新蜜再開リマインド配信（対応仮説: H0008）</h4>
@@ -421,6 +657,24 @@
 <li><strong>期待効果</strong>: 純効果 +¥100K/週、月間 +¥400K</li>
 <li><strong>検証KPI</strong>: Meta Frequency 1.5以下維持、Meta ROAS 2.5以上維持</li>
 </ul>
+<h4>5-B. LINE広告 予算増額（GA4実測H0012・新規仮説）</h4>
+<ul>
+<li><strong>領域</strong>: 広告</li>
+<li><strong>対象</strong>: LINE広告「line02」「line_rich」キャンペーン（daily_kpi.xlsxの『LINE』シートで予算確認）</li>
+<li><strong>作業内容</strong>:</li>
+</ul>
+<ol>
+<li>GA4で過去6日の実績確認済: line02/line セッション146・CVR 10.27%、line_rich/line セッション260・CVR 3.08%。</li>
+<li>LINE広告管理画面で現在の日予算を確認する。</li>
+<li>line02キャンペーンの日予算を+50%、line_richを+30%増額する（Frequencyが1.5を超えない範囲で）。</li>
+<li>1週間後にCVRとFrequeryを再計測し、維持できていれば更に+30%増額する。</li>
+</ol>
+<ul>
+<li><strong>期限</strong>: 2026-04-09</li>
+<li><strong>作業時間目安</strong>: 20分</li>
+<li><strong>期待効果</strong>: 週間CV+15〜25件（現状の週間CV実測 line02:15件＋line_rich:8件=23件から+50%）</li>
+<li><strong>検証KPI</strong>: LINE合計CVR 3.0%以上維持、週間LINE経由CV 35件以上</li>
+</ul>
 <h4>6. P-MAX不承認商品2件 即修正（対応仮説: H0007 Step1）</h4>
 <ul>
 <li><strong>領域</strong>: 広告 / 商品</li>
@@ -440,14 +694,15 @@
 </ul>
 <hr>
 <h3>💡 検討課題（優先度B以下）</h3>
-<h4>7. モバイルCVR 7倍差の原因切り分け（対応仮説: H0004）</h4>
+<h4>7. モバイルUI最適化（対応仮説: H0004 を棄却し新方針へ）</h4>
 <ul>
-<li><strong>領域</strong>: アクセス解析 / ページ・UI</li>
-<li><strong>対象</strong>: GA4『デバイス別CVR』レポート、Clarityデッドクリック1,220件の発生ページ</li>
+<li><strong>領域</strong>: ページ・UI / アクセス解析</li>
+<li><strong>対象</strong>: 全商品LP（モバイルビュー）、Clarityデッドクリック1,220件の発生ページ</li>
 <li><strong>作業内容</strong>:</li>
 </ul>
 <ol>
-<li>H0001タグ修正完了後、計測正常化を1週間待ってからモバイルCVRを再評価する。</li>
+<li><strong>H0004「モバイルCVR 7倍差」はBigQuery実測で否定</strong>（実際は1.66倍差）。hypothesis_logでstatusを <code>rejected</code> に更新する。</li>
+<li>ただしモバイル構成比92.7%・CVR1.12%という事実から、モバイルUI改善は依然として売上レバレッジ大。</li>
 <li>Clarityでデッドクリック1,220件の発生ページURL上位5件を特定する（1時間作業）。</li>
 <li>sticky CTA ABテストは養蜂オフの8〜10月仕込み期に延期する。</li>
 </ol>
@@ -590,7 +845,7 @@
 
   <footer class="text-center text-xs text-gray-400 mt-8 pt-4 border-t">
     <p>Generated by みつばちのーと マーケティング分析自動化システム</p>
-    <p class="mt-1">2026-04-05 12:18:13</p>
+    <p class="mt-1">2026-04-05 13:02:25</p>
   </footer>
 </div>
 

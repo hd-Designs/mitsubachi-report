@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>週次分析レポート 2026-W15</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+  .md-content h1 { font-size: 1.875rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 1rem; }
+  .md-content h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.75rem; border-bottom: 2px solid #f59e0b; padding-bottom: 0.25rem; }
+  .md-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #374151; }
+  .md-content h4 { font-size: 1.1rem; font-weight: 600; margin-top: 0.75rem; margin-bottom: 0.5rem; color: #4b5563; }
+  .md-content p { margin-bottom: 0.75rem; line-height: 1.7; }
+  .md-content ul, .md-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.7; }
+  .md-content ul { list-style-type: disc; }
+  .md-content ol { list-style-type: decimal; }
+  .md-content li { margin-bottom: 0.25rem; }
+  .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+  .md-content th { background: #fef3c7; padding: 0.5rem; border: 1px solid #e5e7eb; text-align: left; font-weight: 600; }
+  .md-content td { padding: 0.5rem; border: 1px solid #e5e7eb; }
+  .md-content tr:nth-child(even) td { background: #fafafa; }
+  .md-content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+  .md-content pre { background: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.75rem 0; }
+  .md-content pre code { background: transparent; color: inherit; padding: 0; }
+  .md-content blockquote { border-left: 4px solid #f59e0b; padding-left: 1rem; color: #6b7280; margin: 0.75rem 0; font-style: italic; }
+  .md-content hr { border: 0; border-top: 1px solid #e5e7eb; margin: 1.5rem 0; }
+  .md-content strong { font-weight: 700; color: #111827; }
+  .md-content a { color: #d97706; text-decoration: underline; }
+  .signal-high { background: #fef2f2 !important; border-left: 4px solid #dc2626; }
+  .signal-medium { background: #fffbeb !important; border-left: 4px solid #f59e0b; }
+  .pri-badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; vertical-align: middle; }
+  .pri-S { background: #dc2626; color: #fff; }
+  .pri-A { background: #f59e0b; color: #fff; }
+  .pri-B { background: #6b7280; color: #fff; }
+  .chg-up { color: #059669; font-weight: 600; }
+  .chg-down { color: #dc2626; font-weight: 600; }
+  .chg-flat { color: #6b7280; }
+  .action-summary-card { background: linear-gradient(to right, #fef3c7, #fde68a); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid #f59e0b; }
+  @media (max-width: 640px) {
+    .md-content table { font-size: 0.75rem; display: block; overflow-x: auto; }
+  }
+</style>
+</head>
+<body class="bg-gray-50">
+<div class="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-2xl">🐝</span>
+      <span class="text-sm text-gray-500">みつばちのーと 分析システム</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">週次分析レポート</h1>
+    <p class="text-gray-600 mt-1">2026-W15</p>
+  </header>
+
+  <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+    <h2 class="text-xl font-bold mb-4 border-b-2 border-amber-500 pb-2">週次KPI推移（直近12週）</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div><canvas id="revenueChart" height="180"></canvas></div>
+      <div><canvas id="roasChart" height="180"></canvas></div>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+    <div class="md-content"><h1>Weekly Report - 2026-W15</h1>
+<p><strong>作成日</strong>: 2026-04-13</p>
+<p><strong>対象期間</strong>: 2026-04-06 (Mon) ~ 2026-04-12 (Sun)</p>
+<p><strong>レポート対象</strong>: みつばちのーと Weekly Analysis &amp; Action Plan</p>
+<hr>
+<h2>📊 Executive Summary</h2>
+<h3>Key Metrics (W15 vs W14)</h3>
+<table><thead><tr>
+<th>KPI</th>
+<th>W15</th>
+<th>W14</th>
+<th>変動</th>
+<th>評価</th>
+</tr></thead><tbody>
+<tr class="signal-medium">
+<td><strong>売上</strong></td>
+<td>¥4,265K</td>
+<td>¥4,559K</td>
+<td><strong><span class="chg-down">↓-6.4%</span></strong></td>
+<td>⚠️ 下落</td>
+</tr>
+<tr class="signal-medium">
+<td><strong>件数</strong></td>
+<td>462</td>
+<td>531</td>
+<td><strong><span class="chg-down">↓-13%</span></strong></td>
+<td>⚠️ 下落</td>
+</tr>
+<tr>
+<td><strong>AOV</strong></td>
+<td>¥9,233</td>
+<td>¥8,586</td>
+<td><strong><span class="chg-up">↑+7.5%</span></strong></td>
+<td>✅ 上昇</td>
+</tr>
+<tr>
+<td><strong>新規</strong></td>
+<td>224件</td>
+<td>209件</td>
+<td><strong><span class="chg-up">↑+7.2%</span></strong></td>
+<td>✅ 増加</td>
+</tr>
+<tr class="signal-medium">
+<td><strong>リピート</strong></td>
+<td>238件</td>
+<td>322件</td>
+<td><strong><span class="chg-down">↓-26%</span></strong></td>
+<td>⚠️ 大幅減</td>
+</tr>
+<tr class="signal-medium">
+<td><strong>Google CPA</strong></td>
+<td>¥6,578</td>
+<td>¥4,355</td>
+<td><strong><span class="chg-up">↑+51%</span></strong></td>
+<td>⚠️ 急騰</td>
+</tr>
+<tr>
+<td><strong>Meta CPA</strong></td>
+<td>¥2,835</td>
+<td>¥3,150</td>
+<td><strong><span class="chg-down">↓-10%</span></strong></td>
+<td>✅ 改善</td>
+</tr>
+<tr>
+<td><strong>定期便新規</strong></td>
+<td>20件</td>
+<td>17件</td>
+<td><strong><span class="chg-up">↑+17.6%</span></strong></td>
+<td>✅ 増加</td>
+</tr>
+<tr>
+<td><strong>定期便解約</strong></td>
+<td>8件/週</td>
+<td>19件/週</td>
+<td><strong><span class="chg-down">↓-58%</span></strong></td>
+<td>✅ 改善</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🎯 重大課題 &amp; 対応施策（優先度順）</h2>
+<h3>【CRITICAL】ギフト仕込みデッドライン本週末</h3>
+<p><strong>状況</strong>: 母の日（5/10）まで5週間のギフト需要機会が現在喪失中</p>
+<ul>
+<li>Google Shopping ギフト商品 : <strong>停止中</strong></li>
+<li>Meta ギフトキャンペーン : <strong>立ち上げなし</strong></li>
+</ul>
+<p><strong>実績</strong>: ショッピング広告ギフト CVR 4.83%（通常1.09%比 4.4倍）</p>
+<p><strong>施策案</strong>: </p>
+<ol>
+<li>Google Shopping ギフト商品再開（本週末まで）</li>
+<li>Meta ギフトキャンペーン新規立ち上げ（事前テンプレ利用）</li>
+<li>田中氏採蜜シーズン対応：事前テンプレート + ワンクリック実行化</li>
+</ol>
+<p><strong>期待効果</strong>: +¥400K～¥800K/月のギフト売上、ギフト CV +40～60件/月</p>
+<p><strong>実行責任者</strong>: 広告運用チーム（HP&amp;Hiroki）、システム（テンプレート提供）</p>
+<hr>
+<h3>【HIGH】リピート顧客 <span class="chg-down">↓-26%</span> の急減対応</h3>
+<p><strong>状況</strong>: リピート件数が 322 → 238 件/週に大幅減。全体売上 <span class="chg-down">↓-6.4%</span> の主因</p>
+<p><strong>原因推定</strong>: 新蜜シーズン開始マーケティングが「新規向け」に傾きすぎており、既存顧客へのリテンションメッセージが不足している</p>
+<p><strong>施策案</strong>:</p>
+<ol>
+<li>既存顧客向け「新蜜入荷」リマインド配信（LINE/Email）</li>
+<li>定期便ユーザー向けに特別割引・新蜜先行販売告知</li>
+<li>4月後半から「リピート顧客感謝キャンペーン」展開準備</li>
+</ol>
+<p><strong>期待効果</strong>: +¥400K～¥600K/月の売上（リピート +30～50件/週回復）</p>
+<p><strong>実行責任者</strong>: マーケティング（文面作成・配信タイミング）、システム（セグメント抽出）</p>
+<p><strong>実行開始</strong>: 本日中</p>
+<hr>
+<h3>【HIGH】Meta <span class="chg-up">↑+20%</span> 予算増額（即実行可能）</h3>
+<p><strong>状況</strong>: Meta CPA ¥2,835 で好調維持。Frequency 1.17～1.37 で疲弊なし</p>
+<p><strong>施策</strong>: Advantage+ カタログ広告_手動への <span class="chg-up">↑+20%</span> 予算増額</p>
+<p><strong>期待効果</strong>: 週間 CV+15件、月間 +¥130K～¥150K 売上増加</p>
+<p><strong>実行責任者</strong>: 広告運用（予算配分変更）</p>
+<p><strong>実行開始</strong>: 本日中（2週間監視期間設定）</p>
+<hr>
+<h3>【MEDIUM】Google CPA ¥6,578 の学習曲線フォロー</h3>
+<p><strong>状況</strong>: P-Max 新蜜クリエイティブ更新（4/2）による学習リセット後、3～4日目で CPA 急騰</p>
+<p><strong>見通し</strong>: 標準的な学習回復曲線で3週間後（W18までに）¥3,500～¥4,000 に低下見込み</p>
+<p><strong>現在のアクション</strong>: 予算据え置き（学習中は予算上限推奨で供給不足）</p>
+<p><strong>次週フォロー</strong>: W18（4/20～4/26）の CPA 推移確認。¥4,000以下に回復すれば予算調整OK</p>
+<p><strong>実行責任者</strong>: 広告運用（監視）、システム（CPA推移レポート）</p>
+<hr>
+<h3>【URGENT】実運用サイド確認・修正</h3>
+<ol>
+<li><strong>Demand_手動-定期便-屋号kw CPA ¥24,063 異常値</strong></li>
+</ol>
+<ul>
+<li>4/2施策変更時の設定誤り推定</li>
+<li>当日中に設定確認・修正</li>
+</ul>
+<ol>
+<li><strong>定期便解約改善の持続性</strong></li>
+</ol>
+<ul>
+<li>W15で8件/週に改善。W14の19件/週は異常値か、施策効果か判定待ち</li>
+<li>W16データで確認</li>
+</ul>
+<hr>
+<h2>📈 施策成果確認（前週比較）</h2>
+<h3>📊 広告チャネル別</h3>
+<table><thead><tr>
+<th>チャネル</th>
+<th>前週CPA</th>
+<th>当週CPA</th>
+<th>トレンド</th>
+</tr></thead><tbody>
+<tr class="signal-medium">
+<td><strong>Google</strong></td>
+<td>¥4,355</td>
+<td>¥6,578</td>
+<td>⚠️ <span class="chg-up">↑+51%</span> 急騰（学習リセット中）</td>
+</tr>
+<tr>
+<td><strong>Meta</strong></td>
+<td>¥3,150</td>
+<td>¥2,835</td>
+<td>✅ <span class="chg-down">↓-10%</span> 好調維持</td>
+</tr>
+<tr class="signal-medium">
+<td><strong>定期便</strong></td>
+<td>¥5,912</td>
+<td>¥24,063</td>
+<td>⚠️ 異常値（要修正）</td>
+</tr>
+</tbody></table>
+<h3>💰 顧客セグメント別</h3>
+<table><thead><tr>
+<th>セグメント</th>
+<th>前週件数</th>
+<th>当週件数</th>
+<th>AOV推移</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>新規</strong></td>
+<td>209</td>
+<td>224</td>
+<td>¥8,586 → ¥9,233 ✅</td>
+</tr>
+<tr class="signal-medium">
+<td><strong>リピート</strong></td>
+<td>322</td>
+<td>238</td>
+<td>⚠️ <span class="chg-down">↓-26%</span></td>
+</tr>
+<tr>
+<td><strong>定期便</strong></td>
+<td>17</td>
+<td>20</td>
+<td><span class="chg-up">↑+17.6%</span> ✅</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🔄 4週間トレンド分析</h2>
+<table><thead><tr>
+<th>指標</th>
+<th>W12</th>
+<th>W13</th>
+<th>W14</th>
+<th>W15</th>
+<th>トレンド</th>
+</tr></thead><tbody>
+<tr>
+<td>売上</td>
+<td>¥6.7M</td>
+<td>¥3.9M</td>
+<td>¥4.6M</td>
+<td>¥4.3M</td>
+<td>不安定・下落傾向</td>
+</tr>
+<tr>
+<td>件数</td>
+<td>947</td>
+<td>456</td>
+<td>531</td>
+<td>462</td>
+<td>不安定・下落傾向</td>
+</tr>
+<tr>
+<td>AOV</td>
+<td>¥7,079</td>
+<td>¥8,506</td>
+<td>¥8,586</td>
+<td>¥9,233</td>
+<td>✅ 上昇傾向</td>
+</tr>
+</tbody></table>
+<p><strong>解釈</strong>: W12は新蜜シーズン前のセール等で例外値。W13～W15の平均的な水準は¥4.3M前後。AOVは上昇傾向が続いており、単価施策の効果が見える。</p>
+<hr>
+<h2>📋 ナレッジベース更新内容</h2>
+<h3>新仮説を hypothesis_log.jsonl に追記</h3>
+<ul>
+<li><strong>H0021</strong>: P-Max学習曲線予測（testing）</li>
+<li><strong>H0022</strong>: Google計測遅延ノイズ（pending_verification）</li>
+<li><strong>N4</strong>: リピート顧客マーケティング施策不足（action_ready）</li>
+<li><strong>N5</strong>: 定期便解約改善持続性（needs_confirmation）</li>
+<li><strong>N6</strong>: 新規AOV上昇傾向（testing）</li>
+</ul>
+<h3>既存仮説のステータス更新</h3>
+<ul>
+<li><strong>H0008</strong> (定期便リマインド): needs_confirmation → testing（解約改善の継続性確認中）</li>
+</ul>
+<h3>週次KPI履歴に追記</h3>
+<p>weekly_kpi_history.csv に W15 集計行を追加。</p>
+<hr>
+<h2>📅 来週（W16）フォローアップリスト</h2>
+<table><thead><tr>
+<th>項目</th>
+<th>フォロー内容</th>
+<th>責任者</th>
+<th>目標</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>ギフト売上</strong></td>
+<td>立ち上げ後の CV トレンド確認</td>
+<td>広告運用</td>
+<td>CV +20件以上</td>
+</tr>
+<tr>
+<td><strong>リピート売上</strong></td>
+<td>リマインド配信後の購買回復確認</td>
+<td>マーケティング</td>
+<td>+30件以上</td>
+</tr>
+<tr>
+<td><strong>Google CPA</strong></td>
+<td>予算上限状況の継続確認</td>
+<td>広告運用</td>
+<td>引き続き学習中</td>
+</tr>
+<tr>
+<td><strong>Meta CPA</strong></td>
+<td>+20%増額後の Freq・CPA 監視</td>
+<td>広告運用</td>
+<td>CPA ¥2,835 以下維持</td>
+</tr>
+<tr>
+<td><strong>定期便解約</strong></td>
+<td>8件/週トレンド継続確認</td>
+<td>営業</td>
+<td>8件/週 前後で継続なら施策成功</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📌 クリティカルアクション（本日・本週末までに実行）</h2>
+<h3>本日（2026-04-13）</h3>
+<ul>
+<li>[ ] Meta <span class="chg-up">↑+20%</span> 予算増額実装（広告運用）</li>
+<li>[ ] 既存顧客向け「新蜜入荷」リマインド配信検討開始（マーケティング）</li>
+<li>[ ] Demand_手動-定期便-屋号kw 設定確認・修正（広告運用）</li>
+</ul>
+<h3>本週末（2026-04-15まで）</h3>
+<ul>
+<li>[ ] Google Shopping ギフト商品再開（広告運用）</li>
+<li>[ ] Meta ギフトキャンペーン立ち上げ（事前テンプレ活用）（広告運用）</li>
+</ul>
+<hr>
+<h2>📞 その他のコメント</h2>
+<h3>データ取得について</h3>
+<p>本週は GA4 (BigQuery MCP) と Clarity の データが取得できず、サイト行動分析が実施できませんでした。来週までに復旧が必要です。LP別CVR・ファネル通過率などの詳細分析に必要。</p>
+<h3>田中氏リソース制約への配慮</h3>
+<p>4月は採蜜シーズンのため田中氏の時間が限定的。新施策（ギフトCP等）の立ち上げは「事前テンプレート + ワンクリック実行」化が必須。8～10月のオフシーズンにかけて新しい大型施策の企画・仕込みを前倒しすべき。</p>
+<hr>
+<h2>📊 前週との変動サマリー</h2>
+<p>✅ <strong>良い兆候</strong>:</p>
+<ul>
+<li>新規顧客 <span class="chg-up">↑+7.2%</span> 堅調</li>
+<li>新規AOV <span class="chg-up">↑+7.5%</span> 上昇（高額商品の混在増加）</li>
+<li>Meta CPA <span class="chg-down">↓-10%</span> 好調</li>
+<li>定期便新規 <span class="chg-up">↑+17.6%</span> 増加</li>
+<li>定期便解約 <span class="chg-down">↓-58%</span> 改善</li>
+</ul>
+<p>⚠️ <strong>懸念事項</strong>:</p>
+<ul>
+<li>売上 <span class="chg-down">↓-6.4%</span> 下落（リピート減が主因）</li>
+<li>リピート件数 <span class="chg-down">↓-26%</span> 大幅減</li>
+<li>Google CPA <span class="chg-up">↑+51%</span> 急騰（学習リセット中）</li>
+<li>ギフト機会喪失（母の日仕込みデッドライン本週末）</li>
+</ul>
+<hr>
+<p><strong>作成者</strong>: Analytics System</p>
+<p><strong>次回レポート</strong>: 2026-04-20 (Weekly W16)</p></div>
+  </section>
+
+  <footer class="text-center text-xs text-gray-400 mt-8 pt-4 border-t">
+    <p>Generated by みつばちのーと マーケティング分析自動化システム</p>
+    <p class="mt-1">2026-04-13 03:13:53</p>
+  </footer>
+</div>
+
+<script>
+const chartLabels = ["2026-W13", "2026-W14", "2026-W15"];
+const revenueData = [3815445.0, 4119445.0, 4265485.0];
+const ordersData = [483.0, 477.0, 462.0];
+const roasData = [2.81, 4.31, 3.92];
+const cpaData = [3532.0, 4104.0, 3969.0];
+
+new Chart(document.getElementById('revenueChart'), {
+  type: 'line',
+  data: {
+    labels: chartLabels,
+    datasets: [
+      {label: '売上(¥)', data: revenueData, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', yAxisID: 'y', tension: 0.3},
+      {label: '注文数', data: ordersData, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', yAxisID: 'y1', tension: 0.3}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {title: {display: true, text: '週次 売上・注文数推移'}},
+    scales: {
+      y: {type:'linear', position:'left', title:{display:true, text:'売上(¥)'}},
+      y1:{type:'linear', position:'right', title:{display:true, text:'注文数'}, grid:{drawOnChartArea:false}}
+    }
+  }
+});
+new Chart(document.getElementById('roasChart'), {
+  type: 'line',
+  data: {
+    labels: chartLabels,
+    datasets: [
+      {label: 'ROAS', data: roasData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', yAxisID: 'y', tension: 0.3},
+      {label: 'CPA(¥)', data: cpaData, borderColor: '#ec4899', backgroundColor: 'rgba(236,72,153,0.1)', yAxisID: 'y1', tension: 0.3}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {title: {display: true, text: '週次 ROAS・CPA推移'}},
+    scales: {
+      y: {type:'linear', position:'left', title:{display:true, text:'ROAS'}},
+      y1:{type:'linear', position:'right', title:{display:true, text:'CPA(¥)'}, grid:{drawOnChartArea:false}}
+    }
+  }
+});
+</script>
+</body>
+</html>

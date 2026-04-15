@@ -1,0 +1,21 @@
+{
+  "date": "2026-04-12",
+  "day_of_week": "Sun",
+  "revenue": 603679,
+  "orders": 77,
+  "aov": 7840,
+  "new_customers": 37,
+  "repeat_customers": 40,
+  "google_ads_cost": 92009,
+  "google_ads_cv": 22.66,
+  "google_ads_cpa": 4060.41,
+  "google_ads_roas": 1.67,
+  "meta_ads_cost": 86206,
+  "meta_ads_cv": 28,
+  "meta_ads_cpa": 3078.79,
+  "meta_ads_roas": 2.21,
+  "roas_total": 1.87,
+  "subscription_cancels": 2,
+  "merchant_center_disapprovals": 164,
+  "mc_oos_rate": 31
+}
